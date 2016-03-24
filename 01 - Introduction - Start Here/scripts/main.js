@@ -12,12 +12,31 @@ var Header = require('./header');
 var Order = require('./order');
 var Inventory = require('./inventory');
 
-var createBrowserHistory
 /*
   App
 */
-
 var App = React.createClass({
+
+  getInitialState: function(){
+      return {
+        fishes: {},
+        order: {}
+      }
+  },
+
+  addFish: function(fish){
+    var timestamp = (new Date()).getTime();
+    // update the state object
+    this.state.fishes['fish-' + timestamp] = fish;
+    // set the state
+    this.setState({ fishes: this.state.fishes });
+  },
+
+  loadSamples: function(){
+    this.setState({
+      fishes: require('./sample-fishes')
+    });
+  },
 
   render: function(){
     return (
@@ -26,26 +45,35 @@ var App = React.createClass({
           <Header tagline="Fresh Seafood Market" num="5000"/>
         </div>
         <Order />
-        <Inventory />
+        <Inventory addFish={this.addFish} loadSamples={this.loadSamples}/>
       </div>
     )
   }
 
 });
 
-
-
 /*
   StorePicker
   return <StorePicker/> component
 */
-
 var StorePicker = React.createClass({
+
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
+
+  submit: function(e){
+    e.preventDefault();
+    // get the data from the input
+    var storeId = this.refs.storeId.value;
+    // transition from / to /store/:storeId
+    this.context.router.push('/store/' + storeId);
+  },
 
   render: function(){
     var name = 'sergi';
     return (
-      <form className="store-selector">
+      <form className="store-selector" onSubmit={this.submit}>
         <h2>Please Enter A Store {name}</h2>
         <input type="text" ref="storeId" defaultValue={h.getFunName()} required/>
         <input type="submit"/>

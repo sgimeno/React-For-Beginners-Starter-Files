@@ -1,4 +1,5 @@
 var React = require('react');
+var FishForm = require('./fish-form');
 
 /*
   Inventory
@@ -8,7 +9,11 @@ var Inventory = React.createClass({
 
   render: function(){
     return (
-      <p>Inventory</p>
+      <div>
+        <h2>Inventory</h2>
+        <FishForm {...this.props} />
+        <button onClick={this.props.loadSamples}>Load Sample Fishes</button>
+      </div>
     )
   }
 
